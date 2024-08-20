@@ -61,7 +61,7 @@ class _SplashscreenState extends State<Splashscreen>{
     );
 
     return Scaffold(
-      backgroundColor: const Color(0xff6E49CB),
+      backgroundColor: const Color(0xff5a36b6),
       body: Column(
         children: [
           const Expanded(

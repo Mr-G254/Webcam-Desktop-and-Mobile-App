@@ -1,4 +1,6 @@
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:webcam/Camera.dart';
 import 'package:webcam/Components.dart';
 
 class Home extends StatefulWidget{
@@ -9,26 +11,59 @@ class Home extends StatefulWidget{
 }
 
 class _HomeState extends State<Home>{
+  bool cameraIsReady = false;
+
+  @override
+  void initState(){
+    // TODO: implement initState
+    super.initState();
+    showCamera();
+  }
+
+  void showCamera()async{
+    await Camera.setupCamera().then((val){
+      setState(() {
+        cameraIsReady = true;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context){
     final window = Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Status(statusCode: false,),
-        Controls()
+        Container(
+          alignment: Alignment.topLeft,
+          child: Status(statusCode: true,),
+        ),
+        Container(
+          alignment: Alignment.center,
+          child: Controls(),
+        )
       ],
     );
 
+    final cameraDisplay = Container(
+      padding: const EdgeInsets.all(0),
+      // height: double.infinity,
+      // width: double.infinity,
+      // child: CameraPreview(Camera.controller!),
+      child: Transform.scale(
+        scale: 1 / (Camera.controller!.value.aspectRatio * MediaQuery.of(context).size.aspectRatio),
+        child: CameraPreview(Camera.controller!),
+      ),
+    );
+
     return Scaffold(
-      backgroundColor: const Color(0xff6E49CB),
+      backgroundColor: Colors.black,
       body: Stack(
         children: [
-          Container(
-            decoration: const BoxDecoration(
-              image: DecorationImage(image: AssetImage("icons/bg.jpg"),fit: BoxFit.cover),
-            ),
-          ),
-          window
+          cameraIsReady? Center(child: cameraDisplay,) : const Center(child: CircularProgressIndicator(backgroundColor: Colors.white,),),
+          Visibility(
+            visible: cameraIsReady,
+            child: window
+          )
         ],
       )
     );
