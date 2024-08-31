@@ -30,41 +30,87 @@ class _HomeState extends State<Home>{
 
   @override
   Widget build(BuildContext context){
+    final cameraDisplay = Container(
+      padding: const EdgeInsets.all(0),
+      alignment: Alignment.topLeft,
+      child: CameraPreview(Camera.controller!),
+    );
+
     final window = Column(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Container(
-          alignment: Alignment.topLeft,
-          child: Status(statusCode: true,),
-        ),
-        Container(
-          alignment: Alignment.center,
-          child: Controls(),
+        SafeArea(child: cameraDisplay,),
+        Expanded(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              GestureDetector(
+                child: Container(
+                  padding: const EdgeInsets.all(15),
+                  child: const Image(
+                    image: AssetImage("icons/mic.png"),
+                    height: 35,
+                    width: 35,
+                  ),
+                ),
+              ),
+              GestureDetector(
+                onTap: ()async{
+                  await Camera.switchCamera().then((val){
+                    setState(() {
+
+                    });
+                  });
+                },
+                child: Container(
+                  padding: const EdgeInsets.all(15),
+                  child: const Image(
+                    image: AssetImage("icons/refresh.png"),
+                    height: 35,
+                    width: 35,
+                  ),
+                ),
+              ),
+              GestureDetector(
+                onTap: ()async{
+                  await Camera.toggleFlash().then((val){
+                    setState(() {
+
+                    });
+                  });
+                },
+                child: Container(
+                  padding: const EdgeInsets.all(15),
+                  child: Image(
+                    image: const AssetImage("icons/flash.png"),
+                    color: Camera.isFlashOn ? const Color(0xff5a36b6) : null,
+                    height: 35,
+                    width: 35,
+                  ),
+                ),
+              )
+            ],
+          ),
         )
       ],
     );
 
-    final cameraDisplay = Container(
-      padding: const EdgeInsets.all(0),
-      // height: double.infinity,
-      // width: double.infinity,
-      // child: CameraPreview(Camera.controller!),
-      child: Transform.scale(
-        scale: 1 / (Camera.controller!.value.aspectRatio * MediaQuery.of(context).size.aspectRatio),
-        child: CameraPreview(Camera.controller!),
-      ),
-    );
-
     return Scaffold(
       backgroundColor: Colors.black,
-      body: Stack(
-        children: [
-          cameraIsReady? Center(child: cameraDisplay,) : const Center(child: CircularProgressIndicator(backgroundColor: Colors.white,),),
-          Visibility(
-            visible: cameraIsReady,
-            child: window
-          )
-        ],
+      body: Container(
+        padding: const EdgeInsets.all(0),
+        child: Stack(
+          children: [
+            Container(
+              alignment: Alignment.center,
+              child: cameraIsReady? window : const Center(child: CircularProgressIndicator(backgroundColor: Colors.white,),),
+            ),
+            Container(
+              alignment: Alignment.topLeft,
+              child: const SafeArea(child: Status(statusCode: false,),),
+            ),
+
+          ],
+        ),
       )
     );
   }
