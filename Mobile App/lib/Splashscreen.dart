@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'Home.dart';
 
@@ -19,8 +20,13 @@ class _SplashscreenState extends State<Splashscreen>{
   void initState() {
     // TODO: implement initState
     super.initState();
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown
+    ]);
+
     widget.timer = Timer(const Duration(seconds: 2), (){
-      Navigator.push(context, MaterialPageRoute(builder: (context) => const Home()));
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const Home()));
     });
 
   }
