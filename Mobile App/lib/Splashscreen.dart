@@ -1,13 +1,11 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
 import 'Home.dart';
 
 class Splashscreen extends StatefulWidget{
-  late Timer timer;
   Splashscreen({super.key});
+  late Timer timer;
 
   @override
   State<Splashscreen> createState() => _SplashscreenState();

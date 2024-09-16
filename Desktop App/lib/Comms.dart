@@ -1,8 +1,10 @@
 import 'dart:typed_data';
 import 'package:usb_serial/usb_serial.dart';
+import 'package:webcam/Components.dart';
 
 abstract class Comms{
   static List<UsbDevice> devices = [];
+  static List<Phone> deviceWidgets = [];
   static late Function statusUpdate;
 
   static void initialize(Function() onChange)async{
@@ -12,7 +14,6 @@ abstract class Comms{
   }
 
   static Future<void> identifyConnectedDevices()async{
-    List<UsbDevice> devices = await UsbSerial.listDevices();
 
     for(final i in devices){
       connectToDevices(i);
@@ -29,7 +30,8 @@ abstract class Comms{
       port.inputStream!.listen((data) {
         String message = String.fromCharCodes(data);
         if (message == "Connection_Accepted@Mrg") {
-          Comms.devices.add(device);
+          devices.add(device);
+          deviceWidgets.add(Phone(device: device));
           statusUpdate();
 
         }
@@ -48,6 +50,7 @@ abstract class Comms{
 
       } else if (event.event == UsbEvent.ACTION_USB_DETACHED) {
         devices.remove(event.device);
+        deviceWidgets.remove(Phone(device: event.device!,));
         statusUpdate();
       }
 

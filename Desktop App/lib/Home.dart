@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:webcam/Comms.dart';
 
 class Home extends StatefulWidget{
   const Home({super.key});
@@ -8,6 +9,15 @@ class Home extends StatefulWidget{
 }
 
 class _HomeState extends State<Home>{
+
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    Comms.initialize(()=>setState(() {}));
+  }
+
   @override
   Widget build(BuildContext context){
     void showDialog(){
@@ -122,50 +132,6 @@ class _HomeState extends State<Home>{
         )
       ],
     );
-
-    final card = Container(
-      padding: const EdgeInsets.only(top: 5,right: 5),
-      height: 250,
-      width: 200,
-      child: Card(
-        clipBehavior: Clip.antiAliasWithSaveLayer,
-        color: const Color(0xff452D80),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        child: Column(
-          children: [
-            Expanded(
-              flex: 5,
-              child: Container(
-                padding: const EdgeInsets.all(10),
-                clipBehavior: Clip.antiAliasWithSaveLayer,
-                decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
-                child: const Image(image: AssetImage("icons/phone.png")),
-              )
-            ),
-            Expanded(
-              flex: 1,
-              child: Container(
-                width: double.infinity,
-                height: double.infinity,
-                color: const Color(0xffB61C36),
-                child: Container(
-                  padding: const EdgeInsets.all(5),
-                  child: const Text(
-                    'Samsung S22+',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        fontFamily: "Orelega",
-                        fontSize: 18,
-                        color: Colors.white
-                    ),
-                  ),
-                ),
-              )
-            )
-          ],
-        ),
-      ),
-    );
     
     final window = Column(
       children: [
@@ -205,7 +171,6 @@ class _HomeState extends State<Home>{
                     style: TextStyle(
                         fontFamily: "Orelega",
                         fontSize: 18,
-                        // fontWeight: FontWeight.bold,
                         color: Colors.white
                     ),
                   ),
@@ -213,26 +178,10 @@ class _HomeState extends State<Home>{
                 Expanded(
                   child: GridView.extent(
                     maxCrossAxisExtent: 250,
-                    children: [
-                      card,
-                      card,
-                      card,
-                      card,
-                      card,
-                      card,
-                      card,
-                      card,
-                      card,
-                      card,
-                      card,
-                      card,
-                      card,
-                      card,
-                      card,
-                    ],
+                    children: Comms.deviceWidgets
                   ),
                 )
-                
+
               ],
             ),
           )
